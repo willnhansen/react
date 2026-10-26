@@ -110,6 +110,33 @@ describe('ReactDOMRoot', () => {
     expect(container.textContent).toEqual('');
   });
 
+  it('treats calling unmount twice as a no-op', async () => {
+    function App() {
+      useEffect(() => {
+        Scheduler.log('mount');
+        return () => Scheduler.log('unmount');
+      }, []);
+      return 'Hi';
+    }
+
+    const root = ReactDOMClient.createRoot(container);
+    await act(() => {
+      root.render(<App />);
+    });
+    assertLog(['mount']);
+    expect(container.textContent).toEqual('Hi');
+
+    root.unmount();
+    assertLog(['unmount']);
+    expect(container.textContent).toEqual('');
+
+    // A second call should not throw, warn, or run cleanup again.
+    root.unmount();
+    await waitForAll([]);
+    assertLog([]);
+    expect(container.textContent).toEqual('');
+  });
+
   it('can be immediately unmounted', async () => {
     const root = ReactDOMClient.createRoot(container);
     await act(() => {
