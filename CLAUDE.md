@@ -9,11 +9,12 @@ Monorepo for the React runtime (`react`, `react-dom`, reconciler, Fizz/Flight se
 
 ## Commands (yarn 1 only)
 - Test: `yarn test --silent --no-watchman <pattern>`. Never run `jest` directly (it throws) or without a pattern (whole suite).
-- `--silent` prints one dot per *file*. To prove a new test ran, drop `--silent`, add `-t "test name"`, and look for `1 passed`.
+- `--silent` prints only a dot per *file* and `Done`, with no `Tests:` summary line (so `grep Tests:` finds nothing); a failure prints its diff. For counts, or to prove a new test ran, drop `--silent`, add `-t "test name"`, and look for `1 passed`.
 - Default channel is experimental + development. Also check `-r=stable`, `--prod`, and `-r=www-modern --variant=false` (www defaults to `--variant=true`). DevTools tests need `--project devtools`.
 - Format + lint changed files: `yarn prettier && yarn linc`. linc diffs against local `main` and enforces the source rules (no `?.`, no `for...of`, DEV-only `console.error`, error codes), so run it rather than guessing.
 - Types: `yarn flow dom-node`. Renderer names are in `scripts/shared/inlinedHostConfigs.js`; there is no `native`.
-- Full check before finishing: `/verify`. Tests don't need a build; don't run `yarn build` unless asked.
+- Full check before finishing: `/verify`.
+- Build: tests don't need one, so only build when asked: `yarn build react/index,react-dom/index --type=NODE_DEV` (output in `build/`).
 
 ## Tests
 - Name tests `*-test.js` and put them directly in `__tests__/` (helpers go in a subfolder). Use `*-test.internal.js` only if the test mutates `ReactFeatureFlags`.
