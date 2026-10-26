@@ -11,7 +11,7 @@ Monorepo for the React runtime (`react`, `react-dom`, reconciler, Fizz/Flight se
 - Full check before finishing: `/verify`. Tests don't need a build; don't run `yarn build` unless asked.
 
 ## Test runtime traps (not visible in code, not caught by lint)
-- Any unasserted `console.error`/`warn` fails the test; stray `console.log` fails only in CI. Assert with `assertConsoleErrorDev` (see `packages/react-dom/src/__tests__/ReactDOMComponent-test.js:198`).
+- Any unasserted `console.error`/`warn` fails the test; stray `console.log` fails only in CI (reproduce with `CI=true yarn test ...`). Assert with `assertConsoleErrorDev` (see `packages/react-dom/src/__tests__/ReactDOMComponent-test.js:198`).
 - `act` throws if `Scheduler.log` entries haven't been checked with `assertLog`.
 - `// @gate flag` does **not** skip: the test runs and must *fail* when the gate is false. If your change makes a gated test pass, update the gate.
 - Only files directly in `__tests__/` are collected; helpers go in a subfolder.
