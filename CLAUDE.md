@@ -9,7 +9,6 @@ Monorepo for the React runtime (`react`, `react-dom`, reconciler, Fizz/Flight se
 
 ## Commands
 - Test: `yarn test --silent --no-watchman <pattern>`. Never run `jest` directly (it throws) or without a pattern (whole suite).
-- `--silent` prints one dot per *file*. To prove a new test ran, drop `--silent`, add `-t "test name"`, and look for `1 passed`.
 - Default channel is experimental + development. Also check `-r=stable`, `--prod`, and `-r=www-modern --variant=false` (www defaults to `--variant=true`). DevTools tests need `--project devtools`.
 - Format + lint changed files: `yarn prettier && yarn linc` (diffs against local `main`).
 - Types: `yarn flow dom-node`. Renderer names are in `scripts/shared/inlinedHostConfigs.js`; there is no `native`.
@@ -21,7 +20,7 @@ Monorepo for the React runtime (`react`, `react-dom`, reconciler, Fizz/Flight se
 - Source style rules (no `?.`, no `for...of`, `console.error` only inside `if (__DEV__)`, error codes) are enforced by `yarn linc`, so run it rather than guessing. For feature flags use `/feature-flags`; for new error messages / `codes.json` use `/extract-errors`.
 - Name tests `*-test.js` and put them directly in `__tests__/` (helpers go in a subfolder). Use `*-test.internal.js` only if the test mutates `ReactFeatureFlags`.
 - Test idiom from `internal-test-utils`: render via `ReactDOMClient.createRoot` or `ReactNoop` inside `await act(...)`. Record ordering and effects with `Scheduler.log('x')`, then check them with `assertLog([...])`.
-- Any unasserted `console.error`/`warn` fails the test. A stray `console.log` fails only in CI (reproduce with `CI=true yarn test ...`). Assert with `assertConsoleErrorDev` (see `packages/react-dom/src/__tests__/ReactDOMComponent-test.js:198`).
+- Any unasserted `console.error`/`warn` fails the test. A stray `console.log` fails only in CI. Assert with `assertConsoleErrorDev` (see `packages/react-dom/src/__tests__/ReactDOMComponent-test.js:198`).
 - `act` throws if `Scheduler.log` entries haven't been checked with `assertLog`.
 - `// @gate flag` does **not** skip: the test runs and must *fail* when the gate is false. If your change makes a gated test pass, update the gate.
 
